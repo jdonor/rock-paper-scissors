@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Josiah's Rock Paper Scissors game</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    <script>
+        const results = Object.freeze({
+            WIN: 1,
+            LOSE: 2,
+            TIE: 3,
+        });
+
+        const plays = ['Rock', 'Paper', 'Scissors'];
+        
+        function computerPlay() {
+            const index = Math.floor(Math.random() * 3);
+            return plays[index];
+        }
+
+        function playRound(playerSelection, computerSelection) {
+            if (playerSelection===computerSelection) {
+                return results.TIE;
+            } else if (playerSelection==="Rock") {
+                if (computerSelection==="Paper") {
+                    return results.LOSE;
+                } else {
+                    return results.WIN;
+                }
+            } else if (playerSelection==="Paper") {
+                if (computerSelection==="Rock") {
+                    return results.WIN;
+                } else {
+                    return results.LOSE;
+                }
+            } else {
+                if (computerSelection==="Rock") {
+                    return results.LOSE;
+                } else {
+                    return results.WIN;
+                }
+            }
+        }
+
+        function roundResult(result, playerSelection, computerSelection) {
+            if (result===results.WIN) {
+                return "You win! " + playerSelection + " beats " + computerSelection;
+            } else if (result===results.LOSE) {
+                return "You lose! " + computerSelection + " beats " + playerSelection;
+            } else if (result===results.TIE) {
+                return "You tie! " + playerSelection + " ties " + computerSelection;
+            }
+        }
+
+        function formatTitleCase(string) {
+            return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+        }
+
+        function playerPlay() {
+            let input = "";
+
+            while (!plays.includes(input)) {
+                input = prompt("Enter valid rock-paper-scissors move:");
+                input = formatTitleCase(input);
+            }
+
+            return input;
+        }
+
+        function game() {
+            const NUM_ROUNDS = 5;
+            let wins = 0;
+            let losses = 0;
+            let ties = 0;
+
+            for (let i=0; i<NUM_ROUNDS; i++) {
+                const playerSelection = playerPlay();
+                const computerSelection = computerPlay();
+                const result = playRound(playerSelection, computerSelection);
+                console.log(roundResult(result, playerSelection, computerSelection));
+                if (result===results.WIN) wins++;
+                else if (result===results.LOSE) losses++;
+                else if (result===results.TIE) ties++;
+            }
+
+            if (wins>losses) {
+                console.log("You won the game :)");
+            } else if (wins<losses) {
+                console.log("You lost the game :(");
+            } else {
+                console.log("You tied -_-");
+            }
+
+            console.log(`Your record was (w/l/t): ${wins}/${losses}/${ties}`);
+        }
+
+        game();
+    </script>
+</body>
+</html>
