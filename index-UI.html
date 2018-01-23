@@ -13,6 +13,13 @@
         <button id="Scissors">Scissors</button>
     </div>
 
+    <div id="results">
+        <div id="scores">
+            <p>Wins: <span id="wins">0</span> Ties: <span id="ties">0</span> Losses: <span id="losses">0</span></p>
+        </div>
+        <div id="messages"></div>
+    </div>
+
     <script>
         const results = Object.freeze({
             WIN: 1,
@@ -61,53 +68,59 @@
             }
         }
 
-        function formatTitleCase(string) {
-            return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+        function addMessage(messageText) {
+            const messages = document.querySelector('#messages');
+            const message = document.createElement('p');
+            message.textContent = messageText;
+
+            messages.appendChild(message);
         }
 
-        function playerPlay() {
-            let input = "";
+        function addWin() {
+            const wins = document.querySelector('#wins');
+            let numWins = parseInt(wins.textContent);
+            numWins++;
+            wins.textContent = numWins;
 
-            while (!plays.includes(input)) {
-                input = prompt("Enter valid rock-paper-scissors move:");
-                input = formatTitleCase(input);
+            if (numWins === 5) {
+                addMessage("You won the game!");
+                endGame();
             }
-
-            return input;
         }
 
-        function game() {
-            const NUM_ROUNDS = 5;
-            let wins = 0;
-            let losses = 0;
-            let ties = 0;
+        function addLoss() {
+            const losses = document.querySelector('#losses');
+            let numLosses = parseInt(losses.textContent);
+            numLosses++;
+            losses.textContent = numLosses;
 
-            for (let i=0; i<NUM_ROUNDS; i++) {
-                const playerSelection = playerPlay();
-                const computerSelection = computerPlay();
-                const result = playRound(playerSelection, computerSelection);
-                console.log(roundResult(result, playerSelection, computerSelection));
-                if (result===results.WIN) wins++;
-                else if (result===results.LOSE) losses++;
-                else if (result===results.TIE) ties++;
+            if (numLosses === 5) {
+                addMessage("You lost the game");
+                endGame();
             }
+        }
 
-            if (wins>losses) {
-                console.log("You won the game :)");
-            } else if (wins<losses) {
-                console.log("You lost the game :(");
-            } else {
-                console.log("You tied -_-");
-            }
+        function addTie() {
+            const ties = document.querySelector('#ties');
+            let numTies = parseInt(ties.textContent);
+            numTies++;
+            ties.textContent = numTies;
+        }
 
-            console.log(`Your record was (w/l/t): ${wins}/${losses}/${ties}`);
+        function endGame() {
+            const buttons = document.querySelector('#buttons');
+            buttons.innerHTML = "<button onclick='location.reload()'>Play Again</button>";
         }
 
         function makeMove() {
             const playerSelection = this.id;
             const computerSelection = computerPlay();
             const result = playRound(playerSelection, computerSelection);
-            console.log(roundResult(result, playerSelection, computerSelection));
+            addMessage(roundResult(result, playerSelection, computerSelection));
+
+            if (result === results.WIN) addWin();
+            else if (result === results.LOSE) addLoss();
+            else if (result === results.TIE) addTie();
         }
 
         const buttons = document.querySelectorAll('button');
