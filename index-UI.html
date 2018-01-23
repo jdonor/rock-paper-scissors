@@ -7,6 +7,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
+    <div id="buttons">
+        <button id="Rock">Rock</button>
+        <button id="Paper">Paper</button>
+        <button id="Scissors">Scissors</button>
+    </div>
+
     <script>
         const results = Object.freeze({
             WIN: 1,
@@ -97,7 +103,15 @@
             console.log(`Your record was (w/l/t): ${wins}/${losses}/${ties}`);
         }
 
-        game();
+        function makeMove() {
+            const playerSelection = this.id;
+            const computerSelection = computerPlay();
+            const result = playRound(playerSelection, computerSelection);
+            console.log(roundResult(result, playerSelection, computerSelection));
+        }
+
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => button.addEventListener('click', makeMove));
     </script>
 </body>
 </html>
